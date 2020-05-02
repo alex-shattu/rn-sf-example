@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_type">com.mytrail.react.login</string>
+	<string name="app_name">FirstReact</string>
+	<string name="app_package">com.mytrail.react</string>
+</resources>

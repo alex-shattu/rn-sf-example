@@ -1,0 +1,60 @@
+{
+  "name": "FirstReact",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "npm run reverse && npx react-native start",
+    "android": "npx react-native run-android",
+    "pods": "cd ./ios && rm -rf Pods && pod install && cd ..",
+    "test": "jest",
+    "reinstall": "rm -rf node_modules && npm i",
+    "cache": "npm clean cache --force && yarn clean cache",
+    "reverse": "adb reverse tcp:8081 tcp:8081"
+  },
+  "sdkDependencies": {
+    "SalesforceMobileSDK-Android": "https://github.com/forcedotcom/SalesforceMobileSDK-Android.git#v8.1.0",
+    "SalesforceMobileSDK-iOS": "https://github.com/forcedotcom/SalesforceMobileSDK-iOS.git#v8.1.0"
+  },
+  "dependencies": {
+    "@react-native-community/cli-platform-android": "^4.8.0",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/drawer": "^5.6.3",
+    "@react-navigation/native": "^5.1.7",
+    "@react-navigation/stack": "^5.2.14",
+    "acorn": "^6.0.0",
+    "react": "16.9.0",
+    "react-native": "0.61.3",
+    "react-native-config": "^1.0.0",
+    "react-native-easy-toast": "^1.2.0",
+    "react-native-elements": "^2.0.0",
+    "react-native-force": "git+https://github.com/forcedotcom/SalesforceMobileSDK-ReactNative.git#v8.1.0",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-reanimated": "^1.8.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "^2.7.0",
+    "react-native-vector-icons": "^6.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/runtime": "^7.6.2",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "babel-plugin-optional-require": "^0.3.1",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react-native": "^3.8.1",
+    "jest": "^24.1.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "react-devtools": "^3.6.3",
+    "react-test-renderer": "16.9.0",
+    "rimraf": "2.6.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}
