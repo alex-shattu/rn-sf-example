@@ -10,7 +10,9 @@
     "ios": "npx react-native run-ios",
     "pods": "cd ./ios && rm -rf Pods && pod install && cd ..",
     "test": "jest",
-    "reinstall": "rm -rf node_modules && npm i",
+    "reinstall": "run-script-os",
+    "reinstall:win32": "rmdir /q/s node_modules && npm i",
+    "reinstall:linux:darwin": "rm -rf node_modules && npm i",
     "cache": "npm clean cache --force && yarn clean cache",
     "reverse": "adb reverse tcp:8081 tcp:8081"
   },
