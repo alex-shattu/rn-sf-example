@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "npm run reverse && npx react-native start",
+    "start": "run-script-os",
+    "start:win32": "npm run reverse && npx react-native start",
+    "start:linux:darwin": "npx react-native start",
     "android": "npx react-native run-android",
+    "ios": "npx react-native run-ios",
     "pods": "cd ./ios && rm -rf Pods && pod install && cd ..",
     "test": "jest",
     "reinstall": "rm -rf node_modules && npm i",
@@ -24,15 +27,16 @@
     "acorn": "^6.0.0",
     "react": "16.9.0",
     "react-native": "0.61.3",
-    "react-native-config": "^1.0.0",
     "react-native-easy-toast": "^1.2.0",
     "react-native-elements": "^2.0.0",
     "react-native-force": "git+https://github.com/forcedotcom/SalesforceMobileSDK-ReactNative.git#v8.1.0",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
+    "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "^2.7.0",
-    "react-native-vector-icons": "^6.6.0"
+    "react-native-vector-icons": "^6.6.0",
+    "run-script-os": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.6.2",

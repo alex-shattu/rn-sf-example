@@ -3,7 +3,6 @@ Based on [forcereact](https://www.npmjs.com/package/forcereact)
 
 ##### Includes:
 
-- [react-native-config](https://www.npmjs.com/package/react-native-config) for using .env file
 - [react-navigation v5](https://www.npmjs.com/package/react-navigation)
 - [react-native-vector-icons](https://www.npmjs.com/package/react-native-vector-icons)
 - [react-native-elements](https://www.npmjs.com/package/react-native-elements)

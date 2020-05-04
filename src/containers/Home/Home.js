@@ -5,8 +5,8 @@ import { ListItem, Icon } from 'react-native-elements';
 import { oauth, net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
 import { Preloader } from '~/components/Preloader';
-import withTheme from '~/services/withTheme';
 import styles from './styles';
+import withTheme from '~/services/withTheme';
 
 class Home extends Component {
   static navigationOptions = {
@@ -52,7 +52,7 @@ class Home extends Component {
         isFetching: false,
         isError: false,
       },
-      () => console.log(`%c${JSON.stringify(data, null, 2)}`, 'color:green'),
+      () => console.table(data),
     );
 
   setStateFailure = ({ errorCode, message }) =>
@@ -73,13 +73,13 @@ class Home extends Component {
         response => this.setStateSuccess({ data: response.records }),
         ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
       );
-      net.describe(
-        'User',
-        response => {
-          console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
-        },
-        ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
-      );
+      // net.describe(
+      //   'User',
+      //   response => {
+      //     console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
+      //   },
+      //   ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+      // );
     });
   }
 
@@ -113,6 +113,8 @@ class Home extends Component {
 
   render() {
     const { isFetching, data, isRefreshing } = this.state;
+    // prettier-ignore
+    // const { theme } = this.props.route.params;
     const { theme } = this.props;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];

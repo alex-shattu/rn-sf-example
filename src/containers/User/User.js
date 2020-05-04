@@ -6,8 +6,8 @@ import { net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
 import { Preloader } from '~/components/Preloader';
 import { ScrollView } from 'react-native-gesture-handler';
-import withTheme from '~/services/withTheme';
 import styles from './styles';
+import withTheme from '~/services/withTheme';
 
 class User extends Component {
   static propTypes = {
@@ -72,7 +72,8 @@ class User extends Component {
 
   render() {
     const { isFetching, user, isRefreshing } = this.state;
-    const { theme } = this.props;
+    // prettier-ignore
+    const {  theme } = this.props;
     delete user.attributes;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
