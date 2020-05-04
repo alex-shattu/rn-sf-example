@@ -29,6 +29,10 @@ project.xcworkspace
 .gradle
 local.properties
 
+# iOS
+#
+Pods/
+
 # node.js
 #
 node_modules/

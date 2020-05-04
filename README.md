@@ -8,8 +8,13 @@ Based on [forcereact](https://www.npmjs.com/package/forcereact)
 - [react-native-elements](https://www.npmjs.com/package/react-native-elements)
 
 ### Install
+For installing modules:
 
 `npm i`
+
+For iOS only, installing pods:
+
+`npm run pods`
 
 For installing Salesforce SDK run:
 
@@ -17,4 +22,13 @@ For installing Salesforce SDK run:
 
 `./installios.js` for iOS
 
-Copy **.env.example** to **.env** and set **REMOTE_ACCESS_CONSUMER_KEY** from your Connected App, for details read [documentation](http://rajaraodv.github.io/salesforce-react-native-tutorial/mobile-sdk-react-native-adding-connected-app.html)
+### Config
+Change **remoteAccessConsumerKey** and **oauthRedirectURI** in:
+
+`rn-sf-example/android/app/src/main/res/values/bootconfig.xml` for Android
+
+`rn-sf-example/ios/FirstReact/bootconfig.plist` for iOS
+
+for details read [documentation](http://rajaraodv.github.io/salesforce-react-native-tutorial/mobile-sdk-react-native-adding-connected-app.html)
+
+
