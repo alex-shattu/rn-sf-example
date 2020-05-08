@@ -27,11 +27,11 @@ class Home extends Component {
 
   componentDidMount() {
     oauth.getAuthCredentials(
-      () => this.fetchData({ isRefreshing: false }), // already logged in
+      () => this._fetchData({ isRefreshing: false }), // already logged in
       () => {
         oauth.authenticate(
-          () => this.fetchData({ isRefreshing: false }),
-          ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+          () => this._fetchData({ isRefreshing: false }),
+          ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
         );
       },
     );
@@ -44,7 +44,7 @@ class Home extends Component {
     }
   }
 
-  setStateSuccess = ({ data = [] }) =>
+  _setStateSuccess = ({ data = [] }) => {
     this.setState(
       {
         data,
@@ -57,8 +57,9 @@ class Home extends Component {
         console.log(data);
       },
     );
+  };
 
-  setStateFailure = ({ errorCode, message }) =>
+  _setStateFailure = ({ errorCode, message }) => {
     this.setState(
       {
         errorMessage: `${errorCode}\n${message}`,
@@ -68,37 +69,38 @@ class Home extends Component {
       },
       () => console.log(`%c${errorCode}\n${message}`, 'color:red'),
     );
+  };
 
-  fetchData = ({ isRefreshing }) => {
+  _fetchData = ({ isRefreshing }) => {
     this.setState(
       { isFetching: !isRefreshing, isRefreshing, isError: false, errorMessage: '' },
       () => {
         net.query(
           'SELECT Id, Name, Email FROM user WHERE isActive = true LIMIT 20',
-          response => this.setStateSuccess({ data: response.records }),
-          ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+          response => this._setStateSuccess({ data: response.records }),
+          ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
         );
         // net.describe(
         //   'User',
         //   response => {
         //     console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
         //   },
-        //   ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+        //   ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
         // );
       },
     );
   };
 
-  showUser = ({ Id: id }) => () => {
+  _showUser = ({ Id: id }) => () => {
     const { navigation } = this.props;
     navigation.navigate('user', { id });
   };
 
-  renderItem = ({ item }) => {
+  _renderItem = ({ item }) => {
     const { theme } = this.props;
     return (
       <ListItem
-        onPress={this.showUser(item)}
+        onPress={this._showUser(item)}
         title={item.Name}
         subtitle={item.Email}
         leftAvatar={() => <Icon name="account-circle" color={theme.colors.text} />}
@@ -113,9 +115,9 @@ class Home extends Component {
     );
   };
 
-  onRefresh = () => this.fetchData({ isRefreshing: true });
+  _onRefresh = () => this._fetchData({ isRefreshing: true });
 
-  keyExtractor = ({ Id }) => Id;
+  _keyExtractor = ({ Id }) => Id;
 
   render() {
     const { isFetching, data, isRefreshing } = this.state;
@@ -130,13 +132,13 @@ class Home extends Component {
             <RefreshControl
               colors={refreshColors}
               refreshing={isRefreshing}
-              onRefresh={this.onRefresh}
+              onRefresh={this._onRefresh}
             />
           }
           style={styles.flatList}
           data={data}
-          renderItem={this.renderItem}
-          keyExtractor={this.keyExtractor}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
         />
         <Preloader isFetching={isFetching} />
         <Toast
