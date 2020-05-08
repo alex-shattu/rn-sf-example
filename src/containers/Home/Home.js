@@ -4,7 +4,7 @@ import 'react-native-gesture-handler'; // needed for react-navigation/stack
 import { ListItem, Icon } from 'react-native-elements';
 import { oauth, net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
-import { Preloader } from '~/components/Preloader';
+import Preloader from '~/components/Preloader';
 import styles from './styles';
 import withTheme from '~/services/withTheme';
 
@@ -52,7 +52,10 @@ class Home extends Component {
         isFetching: false,
         isError: false,
       },
-      () => console.table(data),
+      () => {
+        // console.table(data);
+        console.log(data);
+      },
     );
 
   setStateFailure = ({ errorCode, message }) =>
@@ -66,22 +69,25 @@ class Home extends Component {
       () => console.log(`%c${errorCode}\n${message}`, 'color:red'),
     );
 
-  fetchData({ isRefreshing }) {
-    this.setState({ isFetching: !isRefreshing, isRefreshing, isError: false }, () => {
-      net.query(
-        'SELECT Id, Name, Email FROM user WHERE isActive = true LIMIT 20',
-        response => this.setStateSuccess({ data: response.records }),
-        ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
-      );
-      // net.describe(
-      //   'User',
-      //   response => {
-      //     console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
-      //   },
-      //   ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
-      // );
-    });
-  }
+  fetchData = ({ isRefreshing }) => {
+    this.setState(
+      { isFetching: !isRefreshing, isRefreshing, isError: false, errorMessage: '' },
+      () => {
+        net.query(
+          'SELECT Id, Name, Email FROM user WHERE isActive = true LIMIT 20',
+          response => this.setStateSuccess({ data: response.records }),
+          ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+        );
+        // net.describe(
+        //   'User',
+        //   response => {
+        //     console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
+        //   },
+        //   ([{ errorCode, message }] = [{}]) => this.setStateFailure({ errorCode, message }),
+        // );
+      },
+    );
+  };
 
   showUser = ({ Id: id }) => () => {
     const { navigation } = this.props;
@@ -113,8 +119,6 @@ class Home extends Component {
 
   render() {
     const { isFetching, data, isRefreshing } = this.state;
-    // prettier-ignore
-    // const { theme } = this.props.route.params;
     const { theme } = this.props;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];

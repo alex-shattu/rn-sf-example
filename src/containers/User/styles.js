@@ -6,7 +6,12 @@ const styles = StyleSheet.create({
     position: 'relative',
     justifyContent: 'space-between',
   },
-  scrollView: { flex: 1 },
+  scrollView: {
+    flex: 1,
+  },
+  toast: {
+    marginHorizontal: 20,
+  },
 });
 
 export default styles;

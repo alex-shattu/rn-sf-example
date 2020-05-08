@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import styles from './styles';
 
-export const Preloader = ({ isFetching }) => {
+const Preloader = ({ isFetching }) => {
   const theme = useTheme();
   return isFetching ? (
     <ActivityIndicator
@@ -14,11 +15,4 @@ export const Preloader = ({ isFetching }) => {
   ) : null;
 };
 
-const styles = StyleSheet.create({
-  activityIndicator: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    backfaceVisibility: 'hidden',
-  },
-});
+export default Preloader;

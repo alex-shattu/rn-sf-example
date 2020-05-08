@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import { Text, View, StyleSheet } from 'react-native';
+// import PropTypes from 'prop-types';
+import { Text, View } from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import { oauth } from 'react-native-force';
 import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import styles from './styles';
 
 const DrawerContent = ({ theme, ...props }) => {
   const logout = useCallback(() => {
@@ -30,31 +31,10 @@ const DrawerContent = ({ theme, ...props }) => {
       <DrawerItem
         label="Logout"
         onPress={logout}
-        icon={() => (
-          // <TouchableOpacity onPress={() => {}} style={styles.icon}>
-          <IconI name="ios-log-out" size={30} color={theme.colors.primary} />
-          // </TouchableOpacity>
-        )}
+        icon={() => <IconI name="ios-log-out" size={30} color={theme.colors.primary} />}
       />
     </DrawerContentScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    flex: 1,
-    paddingRight: 10,
-    justifyContent: 'center',
-  },
-  titleWrapper: {
-    height: 40,
-    borderBottomWidth: 1,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 18,
-  },
-});
 
 export default DrawerContent;

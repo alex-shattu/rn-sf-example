@@ -51,11 +51,20 @@ class App extends Component {
     theme: getTheme(),
   };
 
+  componentDidMount() {
+    const { dark } = this.state;
+    const theme = getTheme(dark);
+    StatusBar.setBarStyle(dark ? 'light-content' : 'dark-content');
+    StatusBar.setBackgroundColor(theme.colors.background, true);
+  }
+
   handleChangeTheme = () =>
     this.setState(({ dark: _dark }) => {
       const dark = !_dark;
+      const theme = getTheme(dark);
       StatusBar.setBarStyle(dark ? 'light-content' : 'dark-content');
-      return { dark, theme: getTheme(dark) };
+      StatusBar.setBackgroundColor(theme.colors.background, true);
+      return { dark, theme };
     });
 
   render() {

@@ -4,16 +4,12 @@ import { RefreshControl, View } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
-import { Preloader } from '~/components/Preloader';
+import Preloader from '~/components/Preloader';
 import { ScrollView } from 'react-native-gesture-handler';
 import styles from './styles';
 import withTheme from '~/services/withTheme';
 
 class User extends Component {
-  static propTypes = {
-    Id: PropTypes.string,
-  };
-
   constructor(props) {
     super(props);
     this.toastRef = React.createRef();
@@ -21,16 +17,23 @@ class User extends Component {
       user: {},
       isFetching: false,
       isError: false,
+      errorMessage: '',
     };
   }
 
   componentDidMount() {
-    const { route } = this.props;
-    const id = route.params.id;
+    const { id } = this.props.route.params;
     this._fetchData({ id, isRefreshing: false });
   }
 
-  _setStateSuccess({ user = {} }) {
+  componentDidUpdate(_, { isError: prevIsError }) {
+    const { isError, errorMessage } = this.state;
+    if (isError && !prevIsError) {
+      this.toastRef.current.show(errorMessage, 3000);
+    }
+  }
+
+  _setStateSuccess = ({ user = {} }) => {
     this.setState(
       {
         user,
@@ -38,11 +41,11 @@ class User extends Component {
         isFetching: false,
         isError: false,
       },
-      () => console.log(`%c${JSON.stringify(user, null, 2)}`, 'color:green'),
+      () => console.log(`%c${JSON.stringify(user, null, 2)}`, 'color:yellow'),
     );
-  }
+  };
 
-  _setStateFailure({ errorCode, message }) {
+  _setStateFailure = ({ errorCode, message }) => {
     this.setState(
       {
         errorMessage: `${errorCode}\n${message}`,
@@ -52,9 +55,9 @@ class User extends Component {
       },
       () => console.log(`%c${errorCode}\n${message}`, 'color:red'),
     );
-  }
+  };
 
-  _fetchData({ id, isRefreshing }) {
+  _fetchData = ({ id, isRefreshing }) => {
     this.setState({ isFetching: !isRefreshing, isRefreshing, isError: false }, () =>
       net.query(
         `SELECT Id, Name, Email, UserType, CountryCode, CommunityNickname, isActive FROM user WHERE Id = '${id}'`,
@@ -62,18 +65,17 @@ class User extends Component {
         ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
       ),
     );
-  }
+  };
 
-  _onRefresh() {
-    const { route } = this.props;
-    const id = route.params.id;
+  _onRefresh = () => {
+    const { id } = this.props.route.params;
     this._fetchData({ id, isRefreshing: true });
-  }
+  };
 
   render() {
     const { isFetching, user, isRefreshing } = this.state;
     // prettier-ignore
-    const {  theme } = this.props;
+    const { theme } = this.props;
     delete user.attributes;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
@@ -103,10 +105,20 @@ class User extends Component {
           ))}
           <Preloader isFetching={isFetching} />
         </ScrollView>
-        <Toast ref={this.toastRef} />
+        <Toast
+          ref={this.toastRef}
+          position="center"
+          style={[styles.toast, { backgroundColor: theme.colors.text }]}
+          textStyle={{ color: theme.colors.background }}
+          defaultCloseDelay={1500}
+        />
       </View>
     );
   }
 }
+
+User.propTypes = {
+  id: PropTypes.string,
+};
 
 export default withTheme(User);
