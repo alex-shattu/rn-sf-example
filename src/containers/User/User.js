@@ -41,7 +41,7 @@ class User extends Component {
         isFetching: false,
         isError: false,
       },
-      () => console.log(`%c${JSON.stringify(user, null, 2)}`, 'color:yellow'),
+      () => console.log(user),
     );
   };
 
@@ -79,6 +79,7 @@ class User extends Component {
     delete user.attributes;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
+    const progressBackgroundColor = theme.colors.background;
 
     return (
       <View style={viewStyle}>
@@ -88,6 +89,7 @@ class User extends Component {
               colors={refreshColors}
               refreshing={isRefreshing}
               onRefresh={this._onRefresh}
+              progressBackgroundColor={progressBackgroundColor}
             />
           }
           style={styles.scrollView}>

@@ -30,6 +30,7 @@ const DrawerContent = ({ theme, ...props }) => {
       </View>
       <DrawerItem
         label="Logout"
+        key="logout"
         onPress={logout}
         icon={() => <IconI name="ios-log-out" size={30} color={theme.colors.primary} />}
       />

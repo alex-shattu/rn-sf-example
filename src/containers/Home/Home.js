@@ -124,6 +124,7 @@ class Home extends Component {
     const { theme } = this.props;
     const refreshColors = [theme.colors.primary];
     const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
+    const progressBackgroundColor = theme.colors.background;
 
     return (
       <View style={viewStyle}>
@@ -133,6 +134,7 @@ class Home extends Component {
               colors={refreshColors}
               refreshing={isRefreshing}
               onRefresh={this._onRefresh}
+              progressBackgroundColor={progressBackgroundColor}
             />
           }
           style={styles.flatList}
