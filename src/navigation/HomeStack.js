@@ -3,9 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconI from 'react-native-vector-icons/Ionicons';
 import { Platform, TouchableOpacity, StyleSheet } from 'react-native';
-import Home from '~/containers/Home/Home';
-import User from '~/containers/User/User';
-import withTheme from '~/services/withTheme';
+import Home from 'containers/Home/Home';
+import User from 'containers/User/User';
+import withTheme from 'services/withTheme';
+import Settings from 'containers/Settings';
+import MyProfile from 'containers/MyProfile';
+import routes from 'constants/routes';
 
 const Stack = createStackNavigator();
 
@@ -13,11 +16,11 @@ const HomeStack = ({ navigation, route, theme }) => {
   const handleOpenDrawer = useCallback(() => {
     navigation.openDrawer();
   }, [navigation]);
-
-  const handleChangeTheme = useCallback(() => {
-    const onChangeTheme = route.params?.onChangeTheme ?? (() => {});
-    onChangeTheme();
-  }, [route.params]);
+const handleChangeTheme = () => {}
+  // const handleChangeTheme = useCallback(() => {
+  //   const onChangeTheme = route.params?.onChangeTheme ?? (() => {});
+  //   onChangeTheme();
+  // }, [route.params]);
 
   return (
     <Stack.Navigator
@@ -44,7 +47,7 @@ const HomeStack = ({ navigation, route, theme }) => {
       }}
       headerMode={Platform.select({ android: 'screen', ios: 'float' })}>
       <Stack.Screen
-        name="home"
+        name={routes.HOME}
         component={Home}
         options={{
           headerLeft: () => (
@@ -60,10 +63,28 @@ const HomeStack = ({ navigation, route, theme }) => {
         }}
       />
       <Stack.Screen
-        name="user"
+        name={routes.USER}
         component={User}
         options={{
           headerTitle: 'User',
+          // headerBackTitle: Platform.select({ ios: 'Home' }),
+          headerBackTitleVisible: Platform.OS === 'ios',
+        }}
+      />
+      <Stack.Screen
+        name={routes.SETTINGS}
+        component={Settings}
+        options={{
+          headerTitle: 'Settings',
+          headerBackTitle: Platform.select({ ios: 'Home' }),
+          headerBackTitleVisible: Platform.OS === 'ios',
+        }}
+      />
+      <Stack.Screen
+        name={routes.MY_PROFILE}
+        component={MyProfile}
+        options={{
+          headerTitle: 'Profile',
           headerBackTitle: Platform.select({ ios: 'Home' }),
         }}
       />

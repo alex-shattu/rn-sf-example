@@ -1,0 +1,19 @@
+import { Dimensions } from 'react-native';
+const { width: WINDOW_WIDTH, height: WINDOW_HEIGHT } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('screen');
+
+const MIN_ADDITIONAL_FONT_SIZE = 0;
+const MAX_ADDITIONAL_FONT_SIZE = 6;
+const DEFAULT_ADDITIONAL_FONT_SIZE = 1;
+const STEP_ADDITIONAL_FONT_SIZE = 1;
+
+export {
+  WINDOW_WIDTH,
+  SCREEN_WIDTH,
+  WINDOW_HEIGHT,
+  SCREEN_HEIGHT,
+  MIN_ADDITIONAL_FONT_SIZE,
+  MAX_ADDITIONAL_FONT_SIZE,
+  DEFAULT_ADDITIONAL_FONT_SIZE,
+  STEP_ADDITIONAL_FONT_SIZE,
+};

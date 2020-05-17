@@ -4,9 +4,12 @@ import 'react-native-gesture-handler'; // needed for react-navigation/stack
 import { ListItem, Icon } from 'react-native-elements';
 import { oauth, net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
-import Preloader from '~/components/Preloader';
+import Preloader from 'components/Preloader';
 import styles from './styles';
-import withTheme from '~/services/withTheme';
+import withTheme from 'services/withTheme';
+import { connect } from 'react-redux';
+import { fontAddSizeSelector } from 'store/selectors/settings';
+import getScaledFontSize from 'services/getScaledFontSize';
 
 class Home extends Component {
   static navigationOptions = {
@@ -97,18 +100,27 @@ class Home extends Component {
   };
 
   _renderItem = ({ item }) => {
-    const { theme } = this.props;
+    const { theme, fontAddSize } = this.props;
     return (
       <ListItem
         onPress={this._showUser(item)}
         title={item.Name}
         subtitle={item.Email}
-        leftAvatar={() => <Icon name="account-circle" color={theme.colors.text} />}
+        leftAvatar={() => (
+          <Icon
+            name="account-circle"
+            color={theme.colors.text}
+            size={getScaledFontSize(20, fontAddSize)}
+          />
+        )}
         right={() => <Icon name="arrow-right" />}
         containerStyle={{
           backgroundColor: theme.colors.card,
         }}
-        titleStyle={{ color: theme.colors.text }}
+        titleStyle={[
+          styles.titleStyle,
+          { color: theme.colors.text, fontSize: getScaledFontSize(16, fontAddSize) },
+        ]}
         subtitleStyle={{ color: theme.colors.text }}
         bottomDivider
       />
@@ -154,4 +166,13 @@ class Home extends Component {
   }
 }
 
-export default withTheme(Home);
+const mapStateToProps = state => ({
+  fontAddSize: fontAddSizeSelector(state),
+});
+
+const mapDispatchToProps = {};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTheme(Home));

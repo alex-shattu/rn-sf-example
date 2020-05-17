@@ -48,6 +48,8 @@ pod 'SalesforceReact', :path => '../node_modules/react-native-force'
 pod 'RNGestureHandler', :path => "../node_modules/react-native-gesture-handler"
 pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
 pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+
 end
 
 # Comment the following if you do not want the SDK to emit signpost events for instrumentation. Signposts are  enabled for non release version of the app.

@@ -8,15 +8,12 @@ Based on [forcereact](https://www.npmjs.com/package/forcereact)
 - [react-native-elements](https://www.npmjs.com/package/react-native-elements)
 
 ### Install
-For installing modules:
-
-`npm i`
 
 For iOS only, installing pods:
 
 `npm run pods`
 
-For installing Salesforce SDK run:
+For installing Salesforce SDK run (npm modules will be installed automatically):
 
 `./installandroid.js` for Android
 
