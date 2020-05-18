@@ -12,6 +12,11 @@ const styles = StyleSheet.create({
   toast: {
     marginHorizontal: 20,
   },
+  headerRightIOS: {
+    fontSize: 17,
+    letterSpacing: 0.35,
+    paddingRight: 16,
+  },
 });
 
 export default styles;

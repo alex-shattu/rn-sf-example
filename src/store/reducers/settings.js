@@ -1,17 +1,21 @@
 import { handleActions } from 'redux-actions';
 import { types } from 'store/actions/settings';
-import { DEFAULT_ADDITIONAL_FONT_SIZE } from 'constants/sizes';
+import defaultSettings from 'constants/settings';
 
 const initialState = {
-  fontAddSize: DEFAULT_ADDITIONAL_FONT_SIZE, // 0 - 4
-  darkTheme: false,
+  ...defaultSettings,
 };
 
 export default handleActions(
   {
-    [types.SETTINGS_SET]: (
+    [types.SETTINGS_APPLY]: (
       state,
-      { payload: { fontAddSize = DEFAULT_ADDITIONAL_FONT_SIZE, darkTheme = false } },
+      {
+        payload: {
+          fontAddSize = defaultSettings.fontAddSize,
+          darkTheme = defaultSettings.darkTheme,
+        },
+      },
     ) => ({
       ...state,
       fontAddSize,

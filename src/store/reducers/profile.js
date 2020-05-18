@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { types } from '../actions/myProfile';
+import { types } from 'store/actions/profile';
 
 const initialState = {
   data: {},
@@ -10,18 +10,18 @@ const initialState = {
 
 export default handleActions(
   {
-    [types.MY_PROFILE_FETCH_START]: (state, { payload }) => ({
+    [types.PROFILE_FETCH_START]: (state, { payload }) => ({
       ...state,
       isFetching: true,
       isError: false,
     }),
-    [types.MY_PROFILE_FETCH_SUCCESS]: (state, { payload: { data } }) => ({
+    [types.PROFILE_FETCH_SUCCESS]: (state, { payload: { data } }) => ({
       ...state,
       isFetching: false,
       isError: false,
       data,
     }),
-    [types.MY_PROFILE_FETCH_FAILED]: (state, { payload }) => ({
+    [types.PROFILE_FETCH_FAILED]: (state, { payload }) => ({
       ...state,
       isFetching: false,
       isError: true,

@@ -47,8 +47,22 @@ const DrawerContent = props => {
         onPress={() => props.navigation.navigate(routes.SETTINGS)}
         icon={() =>
           Platform.select({
-            android: <IconI name="md-settings" size={30} color={theme.colors.primary} />,
-            ios: <IconI name="ios-settings" size={30} color={theme.colors.primary} />,
+            android: (
+              <IconI
+                style={{ width: 30, display: 'flex', paddingHorizontal: 2 }}
+                name="md-settings"
+                size={30}
+                color={theme.colors.primary}
+              />
+            ),
+            ios: (
+              <IconI
+                style={{ width: 30, display: 'flex', paddingHorizontal: 2 }}
+                name="ios-settings"
+                size={30}
+                color={theme.colors.primary}
+              />
+            ),
           })
         }
       />
@@ -58,8 +72,22 @@ const DrawerContent = props => {
         onPress={logout}
         icon={() =>
           Platform.select({
-            android: <IconI name="md-log-out" size={30} color={theme.colors.primary} />,
-            ios: <IconI name="ios-log-out" size={30} color={theme.colors.primary} />,
+            android: (
+              <IconI
+                style={{ width: 30, display: 'flex', paddingHorizontal: 2 }}
+                name="md-log-out"
+                size={30}
+                color={theme.colors.primary}
+              />
+            ),
+            ios: (
+              <IconI
+                style={{ width: 30, display: 'flex', paddingHorizontal: 2 }}
+                name="ios-log-out"
+                size={30}
+                color={theme.colors.primary}
+              />
+            ),
           })
         }
       />

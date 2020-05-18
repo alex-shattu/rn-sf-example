@@ -1,11 +1,13 @@
 import { createAction } from 'redux-actions';
 
-const prefix = 'settings';
-
 export const types = {
-  SETTINGS_SET: `${prefix}/set`,
+  SETTINGS_SET: 'settings/set',
+  SETTINGS_APPLY: 'settings/apply',
+  SETTINGS_RESTORE: 'settings/restore',
 };
 
 export default {
   setSettings: createAction(types.SETTINGS_SET),
+  applySettings: createAction(types.SETTINGS_APPLY),
+  restoreSettings: createAction(types.SETTINGS_RESTORE),
 };

@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux';
-import myProfile from './myProfile';
+import profile from './profile';
 import settings from './settings';
+import users from './users';
+import user from './user';
 
 export default combineReducers({
-  myProfile,
+  profile,
   settings,
+  users,
+  user,
 });

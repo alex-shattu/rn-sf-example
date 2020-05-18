@@ -6,12 +6,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  scrollView: {
-    flex: 1,
-  },
-  toast: {
-    marginHorizontal: 20,
-  },
 });
 
 export default styles;

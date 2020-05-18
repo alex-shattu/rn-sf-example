@@ -1,126 +1,81 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshControl, View } from 'react-native';
 import { ListItem } from 'react-native-elements';
-import { net } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
-import Preloader from '~/components/Preloader';
+import Preloader from 'components/Preloader';
 import { ScrollView } from 'react-native-gesture-handler';
+import { fontAddSizeSelector } from 'store/selectors/settings';
+import { userSelector } from 'store/selectors/user';
+import userActions from 'store/actions/user';
 import styles from './styles';
-import withTheme from '~/services/withTheme';
+import { useTheme } from '@react-navigation/native';
+import { connect } from 'react-redux';
 
-class User extends Component {
-  constructor(props) {
-    super(props);
-    this.toastRef = React.createRef();
-    this.state = {
-      user: {},
-      isFetching: false,
-      isError: false,
-      errorMessage: '',
-    };
-  }
+const User = ({ isFetching, user, isRefreshing, getUser, route }) => {
+  useEffect(() => {
+    const { id } = route.params;
+    getUser({ id });
+  }, [getUser, route.params]);
 
-  componentDidMount() {
-    const { id } = this.props.route.params;
-    this._fetchData({ id, isRefreshing: false });
-  }
+  const theme = useTheme();
+  const refreshColors = [theme.colors.primary];
+  const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
+  const progressBackgroundColor = theme.colors.background;
 
-  componentDidUpdate(_, { isError: prevIsError }) {
-    const { isError, errorMessage } = this.state;
-    if (isError && !prevIsError) {
-      this.toastRef.current.show(errorMessage, 3000);
-    }
-  }
-
-  _setStateSuccess = ({ user = {} }) => {
-    this.setState(
-      {
-        user,
-        isRefreshing: false,
-        isFetching: false,
-        isError: false,
-      },
-      () => console.log(user),
-    );
-  };
-
-  _setStateFailure = ({ errorCode, message }) => {
-    this.setState(
-      {
-        errorMessage: `${errorCode}\n${message}`,
-        isError: true,
-        isRefreshing: false,
-        isFetching: false,
-      },
-      () => console.log(`%c${errorCode}\n${message}`, 'color:red'),
-    );
-  };
-
-  _fetchData = ({ id, isRefreshing }) => {
-    this.setState({ isFetching: !isRefreshing, isRefreshing, isError: false }, () =>
-      net.query(
-        `SELECT Id, Name, Email, UserType, CountryCode, CommunityNickname, isActive FROM user WHERE Id = '${id}'`,
-        response => this._setStateSuccess({ user: response.records[0] }),
-        ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
-      ),
-    );
-  };
-
-  _onRefresh = () => {
-    const { id } = this.props.route.params;
-    this._fetchData({ id, isRefreshing: true });
-  };
-
-  render() {
-    const { isFetching, user, isRefreshing } = this.state;
-    // prettier-ignore
-    const { theme } = this.props;
-    delete user.attributes;
-    const refreshColors = [theme.colors.primary];
-    const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
-    const progressBackgroundColor = theme.colors.background;
-
-    return (
-      <View style={viewStyle}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              colors={refreshColors}
-              refreshing={isRefreshing}
-              onRefresh={this._onRefresh}
-              progressBackgroundColor={progressBackgroundColor}
-            />
-          }
-          style={styles.scrollView}>
-          {Object.keys(user).map((key, index) => (
-            <ListItem
-              key={index}
-              title={String(user[key])}
-              subtitle={key}
-              containerStyle={{
-                backgroundColor: theme.colors.card,
-              }}
-              titleStyle={{ color: theme.colors.text }}
-              subtitleStyle={{ color: theme.colors.text }}
-            />
-          ))}
-          <Preloader isFetching={isFetching} />
-        </ScrollView>
-        <Toast
-          ref={this.toastRef}
-          position="center"
-          style={[styles.toast, { backgroundColor: theme.colors.text }]}
-          textStyle={{ color: theme.colors.background }}
-          defaultCloseDelay={1500}
-        />
-      </View>
-    );
-  }
-}
+  return (
+    <View style={viewStyle}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            colors={refreshColors}
+            refreshing={isRefreshing}
+            onRefresh={() => {}}
+            progressBackgroundColor={progressBackgroundColor}
+          />
+        }
+        style={styles.scrollView}>
+        {Object.keys(user).map((key, index) => (
+          <ListItem
+            key={index}
+            title={String(user[key])}
+            subtitle={key}
+            containerStyle={{
+              backgroundColor: theme.colors.card,
+            }}
+            titleStyle={{ color: theme.colors.text }}
+            subtitleStyle={{ color: theme.colors.text }}
+          />
+        ))}
+        <Preloader isFetching={isFetching} />
+      </ScrollView>
+      <Toast
+        // ref={this.toastRef}
+        position="center"
+        style={[styles.toast, { backgroundColor: theme.colors.text }]}
+        textStyle={{ color: theme.colors.background }}
+        defaultCloseDelay={1500}
+      />
+    </View>
+  );
+};
 
 User.propTypes = {
   id: PropTypes.string,
 };
 
-export default withTheme(User);
+const mapStateToProps = (state, { route: { params } }) => ({
+  fontAddSize: fontAddSizeSelector(state),
+  user: userSelector(state, params), // (state, { id })
+});
+
+const { getUser } = userActions;
+
+const mapDispatchToProps = {
+  getUser,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(User);

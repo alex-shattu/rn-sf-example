@@ -21,13 +21,14 @@
     "SalesforceMobileSDK-iOS": "https://github.com/forcedotcom/SalesforceMobileSDK-iOS.git#v8.1.0"
   },
   "dependencies": {
-    "@react-native-community/async-storage": "^1.10.1",
+    "@react-native-community/async-storage": "^1.10.2",
     "@react-native-community/cli-platform-android": "^4.8.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/drawer": "^5.6.3",
     "@react-navigation/native": "^5.1.7",
     "@react-navigation/stack": "^5.2.14",
     "acorn": "^6.0.0",
+    "lodash": "^4.17.15",
     "react": "16.9.0",
     "react-native": "0.61.3",
     "react-native-easy-toast": "^1.2.0",

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { View, Text } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import styles from './styles';
 
 export const MyProfile = () => {
   const theme = useTheme();
-  
+
   return (
-    <View>
+    <View style={styles.container}>
       <Text>My Profile</Text>
     </View>
   );

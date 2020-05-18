@@ -1,178 +1,84 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { View, FlatList, RefreshControl } from 'react-native';
-import 'react-native-gesture-handler'; // needed for react-navigation/stack
-import { ListItem, Icon } from 'react-native-elements';
-import { oauth, net } from 'react-native-force';
+import { oauth } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
+import { useTheme } from '@react-navigation/native';
 import Preloader from 'components/Preloader';
 import styles from './styles';
-import withTheme from 'services/withTheme';
 import { connect } from 'react-redux';
 import { fontAddSizeSelector } from 'store/selectors/settings';
-import getScaledFontSize from 'services/getScaledFontSize';
+import { usersSelector } from 'store/selectors/users';
+import usersActions from 'store/actions/users';
+import Item from './Item';
 
-class Home extends Component {
-  static navigationOptions = {
-    title: 'Mobile SDK Sample App',
-  };
-
-  constructor(props) {
-    super(props);
-    this.toastRef = React.createRef();
-    this.state = {
-      data: [],
-      isFetching: false,
-      isRefreshing: false,
-      isError: false,
-      errorMessage: '',
-    };
-  }
-
-  componentDidMount() {
+const Home = ({ getUsers, isRefreshing, isFetching, data, navigation, fontAddSize }) => {
+  useEffect(() => {
     oauth.getAuthCredentials(
-      () => this._fetchData({ isRefreshing: false }), // already logged in
+      () => fetchData({ isRefreshing: false }), // already logged in
       () => {
         oauth.authenticate(
-          () => this._fetchData({ isRefreshing: false }),
-          ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
+          () => fetchData({ isRefreshing: false }),
+          ([{ errorCode, message }] = [{}]) => {
+            console.log({ errorCode, message });
+          },
         );
       },
     );
-  }
+  }, [fetchData]);
 
-  componentDidUpdate(_, { isError: prevIsError }) {
-    const { isError, errorMessage } = this.state;
-    if (isError && !prevIsError) {
-      this.toastRef.current.show(errorMessage, 3000);
-    }
-  }
+  const ref = useRef(null);
 
-  _setStateSuccess = ({ data = [] }) => {
-    this.setState(
-      {
-        data,
-        isRefreshing: false,
-        isFetching: false,
-        isError: false,
-      },
-      () => {
-        // console.table(data);
-        console.log(data);
-      },
-    );
-  };
+  const fetchData = useCallback(() => {
+    getUsers();
+  }, [getUsers]);
 
-  _setStateFailure = ({ errorCode, message }) => {
-    this.setState(
-      {
-        errorMessage: `${errorCode}\n${message}`,
-        isError: true,
-        isRefreshing: false,
-        isFetching: false,
-      },
-      () => console.log(`%c${errorCode}\n${message}`, 'color:red'),
-    );
-  };
+  const showUser = useCallback(
+    ({ Id: id }) => {
+      navigation.navigate('user', { id });
+    },
+    [navigation],
+  );
 
-  _fetchData = ({ isRefreshing }) => {
-    this.setState(
-      { isFetching: !isRefreshing, isRefreshing, isError: false, errorMessage: '' },
-      () => {
-        net.query(
-          'SELECT Id, Name, Email FROM user WHERE isActive = true LIMIT 20',
-          response => this._setStateSuccess({ data: response.records }),
-          ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
-        );
-        // net.describe(
-        //   'User',
-        //   response => {
-        //     console.table(response.fields.map(({ name, label, type }) => ({ name, label, type })));
-        //   },
-        //   ([{ errorCode, message }] = [{}]) => this._setStateFailure({ errorCode, message }),
-        // );
-      },
-    );
-  };
+  const theme = useTheme();
 
-  _showUser = ({ Id: id }) => () => {
-    const { navigation } = this.props;
-    navigation.navigate('user', { id });
-  };
+  const refreshColors = [theme.colors.primary];
+  const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
+  const progressBackgroundColor = theme.colors.background;
 
-  _renderItem = ({ item }) => {
-    const { theme, fontAddSize } = this.props;
-    return (
-      <ListItem
-        onPress={this._showUser(item)}
-        title={item.Name}
-        subtitle={item.Email}
-        leftAvatar={() => (
-          <Icon
-            name="account-circle"
-            color={theme.colors.text}
-            size={getScaledFontSize(20, fontAddSize)}
+  return (
+    <View style={viewStyle}>
+      <FlatList
+        refreshControl={
+          <RefreshControl
+            colors={refreshColors}
+            refreshing={isRefreshing}
+            onRefresh={() => fetchData({ isRefreshing: true })}
+            progressBackgroundColor={progressBackgroundColor}
           />
-        )}
-        right={() => <Icon name="arrow-right" />}
-        containerStyle={{
-          backgroundColor: theme.colors.card,
-        }}
-        titleStyle={[
-          styles.titleStyle,
-          { color: theme.colors.text, fontSize: getScaledFontSize(16, fontAddSize) },
-        ]}
-        subtitleStyle={{ color: theme.colors.text }}
-        bottomDivider
+        }
+        style={styles.flatList}
+        data={data}
+        renderItem={props => <Item {...props} onClick={showUser} fontAddSize={fontAddSize} />}
+        keyExtractor={({ Id }) => Id}
       />
-    );
-  };
-
-  _onRefresh = () => this._fetchData({ isRefreshing: true });
-
-  _keyExtractor = ({ Id }) => Id;
-
-  render() {
-    const { isFetching, data, isRefreshing } = this.state;
-    const { theme } = this.props;
-    const refreshColors = [theme.colors.primary];
-    const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
-    const progressBackgroundColor = theme.colors.background;
-
-    return (
-      <View style={viewStyle}>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              colors={refreshColors}
-              refreshing={isRefreshing}
-              onRefresh={this._onRefresh}
-              progressBackgroundColor={progressBackgroundColor}
-            />
-          }
-          style={styles.flatList}
-          data={data}
-          renderItem={this._renderItem}
-          keyExtractor={this._keyExtractor}
-        />
-        <Preloader isFetching={isFetching} />
-        <Toast
-          ref={this.toastRef}
-          position="center"
-          style={styles.toast}
-          defaultCloseDelay={1500}
-        />
-      </View>
-    );
-  }
-}
+      <Preloader isFetching={isFetching} />
+      <Toast ref={ref} position="center" style={styles.toast} defaultCloseDelay={1500} />
+    </View>
+  );
+};
 
 const mapStateToProps = state => ({
   fontAddSize: fontAddSizeSelector(state),
+  data: usersSelector(state),
 });
 
-const mapDispatchToProps = {};
+const { getUsers } = usersActions;
+
+const mapDispatchToProps = {
+  getUsers,
+};
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withTheme(Home));
+)(Home);
