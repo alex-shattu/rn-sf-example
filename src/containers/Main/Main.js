@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,45 +7,34 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeStack from 'navigation/HomeStack';
 import DrawerContent from 'components/DrawerContent';
 import getTheme from 'services/getTheme';
-import Initial from 'containers/Initial';
+import settingsSelectors from 'store/selectors/settings';
 
 const Drawer = createDrawerNavigator();
-// const Stack = createStackNavigator();
 
-export const Main = () => {
-  const theme = getTheme();
+const Main = ({ theme, darkTheme, scaleFonts }) => {
+  // const theme = useMemo(() => getTheme({ darkTheme, scaleFonts }), [darkTheme, scaleFonts]);
+
   return (
     <NavigationContainer theme={theme}>
-      {/* <Stack.Navigator
-        initialRouteName="init"
-        screenOptions={{
-          header: () => null,
-        }}>
-        <Stack.Screen name="init" component={Initial} />
-        <Stack.Screen
-          name="main"
-          component={() => ( */}
       <Drawer.Navigator
+        // eslint-disable-next-line no-shadow
         drawerContent={props => <DrawerContent {...props} />}
         initialRouteName="drawer">
-        <Drawer.Screen
-          // initialParams={{ onChangeTheme: this.handleChangeTheme }}
-          name="drawer"
-          component={HomeStack}
-        />
+        <Drawer.Screen name="drawer" component={HomeStack} />
       </Drawer.Navigator>
-      {/* )} */}
-      {/* /> */}
-      {/* </Stack.Navigator> */}
     </NavigationContainer>
   );
 };
 
 Main.propTypes = {
-  // prop: PropTypes
+  darkTheme: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  darkTheme: settingsSelectors.getDarkTheme(state),
+  scaleFonts: settingsSelectors.getScaleFonts(state),
+  theme: settingsSelectors.getTheme(state),
+});
 
 const mapDispatchToProps = {};
 

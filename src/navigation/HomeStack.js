@@ -1,27 +1,23 @@
 import React, { useCallback } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconMI from 'react-native-vector-icons/MaterialIcons';
+// import IconMI from 'react-native-vector-icons/MaterialIcons';
 import IconI from 'react-native-vector-icons/Ionicons';
 import { Platform, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import Home from 'containers/Home/Home';
 import User from 'containers/User/User';
-import withTheme from 'services/withTheme';
 import Settings from 'containers/Settings';
 import MyProfile from 'containers/MyProfile';
 import routes from 'constants/routes';
+import { useTheme } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
-const HomeStack = ({ navigation, route, theme }) => {
+const HomeStack = ({ navigation, route }) => {
+  const theme = useTheme();
   const handleOpenDrawer = useCallback(() => {
     navigation.openDrawer();
   }, [navigation]);
-  // const handleChangeTheme = () => {}
-  // const handleChangeTheme = useCallback(() => {
-  //   const onChangeTheme = route.params?.onChangeTheme ?? (() => {});
-  //   onChangeTheme();
-  // }, [route.params]);
 
   return (
     <Stack.Navigator
@@ -29,7 +25,10 @@ const HomeStack = ({ navigation, route, theme }) => {
       screenOptions={{
         headerTitleAlign: Platform.select({ ios: 'center', android: 'left' }),
         headerStyle: {
-          backgroundColor: theme.colors.background,
+          backgroundColor: Platform.select({
+            android: theme.colors.background,
+            ios: theme.colors.card,
+          }),
           // shadowOpacity: 0,
           // elevation: 0,
         },
@@ -40,11 +39,6 @@ const HomeStack = ({ navigation, route, theme }) => {
           android: () => <IconMCI name={'arrow-left'} size={30} color={theme.colors.primary} />,
           ios: undefined,
         }),
-        // headerRight: () => (
-        //   <TouchableOpacity onPress={handleChangeTheme} style={styles.headerRightIcon}>
-        //     <IconMC name="theme-light-dark" size={30} color={theme.colors.primary} />
-        //   </TouchableOpacity>
-        // ),
       }}
       headerMode={Platform.select({ android: 'screen', ios: 'float' })}>
       <Stack.Screen
@@ -79,18 +73,6 @@ const HomeStack = ({ navigation, route, theme }) => {
           headerTitle: 'Settings',
           headerBackTitle: Platform.select({ ios: 'Home' }),
           headerBackTitleVisible: Platform.OS === 'ios',
-          // headerRight: () => (
-          //   <TouchableOpacity style={styles.headerLeftIcon}>
-          //     {Platform.select({
-          //       ios: (
-          //         <Text style={{ fontSize: 17, letterSpacing: 0.35, color: theme.colors.primary }}>
-          //           Save
-          //         </Text>
-          //       ),
-          //       android: <IconMI name="check" size={30} color={theme.colors.primary} />,
-          //     })}
-          //   </TouchableOpacity>
-          // ),
         }}
       />
       <Stack.Screen
@@ -118,4 +100,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withTheme(HomeStack);
+export default HomeStack;

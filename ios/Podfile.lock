@@ -191,6 +191,8 @@ PODS:
   - React-jsinspector (0.61.3)
   - react-native-safe-area-context (0.7.3):
     - React
+  - react-native-slider (2.0.9):
+    - React
   - React-RCTActionSheet (0.61.3):
     - React-Core/RCTActionSheetHeaders (= 0.61.3)
   - React-RCTAnimation (0.61.3):
@@ -226,7 +228,7 @@ PODS:
     - React-cxxreact (= 0.61.3)
     - React-jsi (= 0.61.3)
     - ReactCommon/jscallinvoker (= 0.61.3)
-  - RNCAsyncStorage (1.10.1):
+  - RNCAsyncStorage (1.10.2):
     - React
   - RNGestureHandler (1.6.1):
     - React
@@ -294,6 +296,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -354,6 +357,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-slider:
+    :path: "../node_modules/@react-native-community/slider"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -412,6 +417,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: ae078e9df9c65bcdcf68f9a17656657932d95528
   React-jsinspector: a8939cc6909607eb5e8a5ecfff7c6226984e174d
   react-native-safe-area-context: 8260e5157617df4b72865f44006797f895b2ada7
+  react-native-slider: b34d943dc60deb96d952ba6b6b249aa8091e86da
   React-RCTActionSheet: 94671eef55b01a93be735605822ef712d5ea208e
   React-RCTAnimation: 524ae33e73de9c0fe6501a7a4bda8e01d26499d9
   React-RCTBlob: 5481c2db702f57207af7e7a9b32d90524b821b72
@@ -422,7 +428,7 @@ SPEC CHECKSUMS:
   React-RCTText: b8f895b94aa0e7778fef28d13f3d71eed4a10c3d
   React-RCTVibration: 262588c97551b0b1c675468cda857466ba5af18f
   ReactCommon: c2c63d9290b422ca6ad5b3663073a015dd892ae9
-  RNCAsyncStorage: f640ddf9266df777c38e112ea5881ead7188b59c
+  RNCAsyncStorage: 1e24da0733cd587bb92ddecde15c0ab716944e1e
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
   SalesforceAnalytics: 555999c992882168912bcd3fdcbe5c38a717650a
@@ -433,6 +439,6 @@ SPEC CHECKSUMS:
   SQLCipher: 0187a2180ac288ea686b670b7141da62cd013b16
   Yoga: 02036f6383c0008edb7ef0773a0e6beb6ce82bd1
 
-PODFILE CHECKSUM: 92d405ae449d4b3d20de921564651e7d60041f04
+PODFILE CHECKSUM: 0aad22281a513cbe2a6869f77712e99e8de5c81c
 
 COCOAPODS: 1.8.0

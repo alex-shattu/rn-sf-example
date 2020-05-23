@@ -10,8 +10,9 @@ const initialState = {
 
 export default handleActions(
   {
-    [types.USER_FETCH_START]: (state, { payload }) => ({
+    [types.USER_FETCH_START]: (state, { payload: { isRefreshing } }) => ({
       ...state,
+      isRefreshing,
       isFetching: true,
       isError: false,
     }),
@@ -19,6 +20,7 @@ export default handleActions(
       ...state,
       isFetching: false,
       isError: false,
+      isRefreshing: false,
       data: {
         ...state.data,
         [data.Id]: data,
@@ -26,6 +28,7 @@ export default handleActions(
     }),
     [types.USER_FETCH_FAILED]: (state, { payload }) => ({
       ...state,
+      isRefreshing: false,
       isFetching: false,
       isError: true,
     }),

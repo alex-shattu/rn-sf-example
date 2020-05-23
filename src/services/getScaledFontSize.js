@@ -8,4 +8,11 @@ const scaleWidth = WINDOW_WIDTH / baseWidth;
 const scaleHeight = WINDOW_HEIGHT / baseHeight;
 const scale = Math.min(scaleWidth, scaleHeight);
 
-export default (size, fontAddSize = 1) => Math.ceil(size * scale) + fontAddSize;
+export default (init, fontAddSize = 0) => ({
+  fontSize: init.scaleFonts
+    ? Math.ceil((init.fontSize + fontAddSize) * scale)
+    : init.fontSize + fontAddSize,
+  lineHeight: init.scaleFonts
+    ? Math.ceil((init.lineHeight + fontAddSize) * scale)
+    : init.lineHeight + fontAddSize,
+});

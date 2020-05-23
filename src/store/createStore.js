@@ -25,7 +25,7 @@ export default () => {
   const store = createStore(persistedReducer, composeEnhancers(middlewares));
   const persistor = persistStore(store);
   // TODO remove
-  // __DEV__ && persistor.purge();
+  __DEV__ && persistor.purge();
   sagaMiddleware.run(sagas);
   return { store, persistor };
 };

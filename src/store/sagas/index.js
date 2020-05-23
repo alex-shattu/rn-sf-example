@@ -1,8 +1,8 @@
 import { all, call } from 'redux-saga/effects';
 
 import { getProfileSaga, updateProfileSaga, updateAvatarProfileSaga } from './profile';
-import { restoreSettingsSaga, setSettingsSaga } from './settings';
-import { getUsersSaga } from './users';
+// import { setSettingsSaga } from './settings';
+import { fetchUsersSaga } from './users';
 import { getUserSaga } from './user';
 
 export default function* rootSaga() {
@@ -10,9 +10,8 @@ export default function* rootSaga() {
     call(getProfileSaga),
     call(updateProfileSaga),
     call(updateAvatarProfileSaga),
-    call(restoreSettingsSaga),
-    call(setSettingsSaga),
-    call(getUsersSaga),
+    // call(setSettingsSaga),
+    call(fetchUsersSaga),
     call(getUserSaga),
   ]);
 }

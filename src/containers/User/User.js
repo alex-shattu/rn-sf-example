@@ -1,44 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshControl, View } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Toast from 'react-native-easy-toast';
-import Preloader from 'components/Preloader';
 import { ScrollView } from 'react-native-gesture-handler';
-import { fontAddSizeSelector } from 'store/selectors/settings';
-import { userSelector } from 'store/selectors/user';
-import userActions from 'store/actions/user';
-import styles from './styles';
-import { useTheme } from '@react-navigation/native';
 import { connect } from 'react-redux';
+import { useTheme } from '@react-navigation/native';
+import Preloader from 'components/Preloader';
+import settingsSelectors from 'store/selectors/settings';
+import userSelectors from 'store/selectors/user';
+import userActions from 'store/actions/user';
+import { usePreviousValue } from 'helpers/hooks';
+import getScaledFontSize from 'services/getScaledFontSize';
+import styles from './styles';
 
-const User = ({ isFetching, user, isRefreshing, getUser, route }) => {
+const User = props => {
+  const prevIsError = usePreviousValue(props.isError);
+  const toastRef = useRef(null);
+
+  const refreshUser = useCallback(
+    () => props.getUser({ id: props.route.params.id, isRefreshing: true }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.route.params.id],
+  );
+
+  const getUser = useCallback(
+    () => props.getUser({ id: props.route.params.id, isRefreshing: false }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.route.params.id],
+  );
+
   useEffect(() => {
-    const { id } = route.params;
-    getUser({ id });
-  }, [getUser, route.params]);
+    getUser();
+  }, [getUser]);
 
   const theme = useTheme();
-  const refreshColors = [theme.colors.primary];
-  const viewStyle = [styles.container, { backgroundColor: theme.colors.background }];
-  const progressBackgroundColor = theme.colors.background;
+
+  useEffect(() => {
+    if (!prevIsError && props.isError) {
+      toastRef.current.show('Error');
+    }
+  }, [props.isError, prevIsError]);
 
   return (
-    <View style={viewStyle}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
         refreshControl={
           <RefreshControl
-            colors={refreshColors}
-            refreshing={isRefreshing}
-            onRefresh={() => {}}
-            progressBackgroundColor={progressBackgroundColor}
+            colors={[theme.colors.primary]}
+            refreshing={props.isRefreshing}
+            onRefresh={refreshUser}
+            progressBackgroundColor={theme.colors.background}
           />
         }
         style={styles.scrollView}>
-        {Object.keys(user).map((key, index) => (
+        {Object.keys(props.user).map((key, index) => (
           <ListItem
             key={index}
-            title={String(user[key])}
+            title={String(props.user[key])}
             subtitle={key}
             containerStyle={{
               backgroundColor: theme.colors.card,
@@ -47,13 +66,16 @@ const User = ({ isFetching, user, isRefreshing, getUser, route }) => {
             subtitleStyle={{ color: theme.colors.text }}
           />
         ))}
-        <Preloader isFetching={isFetching} />
+        <Preloader isFetching={props.isFetching && !props.isRefreshing} />
       </ScrollView>
       <Toast
-        // ref={this.toastRef}
+        ref={toastRef}
         position="center"
+        textStyle={{
+          color: theme.colors.background,
+          fontSize: getScaledFontSize(16, props.fontAddSize),
+        }}
         style={[styles.toast, { backgroundColor: theme.colors.text }]}
-        textStyle={{ color: theme.colors.background }}
         defaultCloseDelay={1500}
       />
     </View>
@@ -65,14 +87,15 @@ User.propTypes = {
 };
 
 const mapStateToProps = (state, { route: { params } }) => ({
-  fontAddSize: fontAddSizeSelector(state),
-  user: userSelector(state, params), // (state, { id })
+  fontAddSize: settingsSelectors.getFontAddSize(state),
+  user: userSelectors.getData(state, params), // (state, { id })
+  isFetching: userSelectors.getIsFetching(state),
+  isRefreshing: userSelectors.getIsRefreshing(state),
+  isError: userSelectors.getIsError(state),
 });
 
-const { getUser } = userActions;
-
 const mapDispatchToProps = {
-  getUser,
+  getUser: userActions.getUser,
 };
 
 export default connect(
