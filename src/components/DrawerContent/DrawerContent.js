@@ -3,12 +3,18 @@ import React, { useCallback, memo } from 'react';
 import { Text, View, Platform } from 'react-native';
 import IconI from 'react-native-vector-icons/Ionicons';
 import IconMCI from 'react-native-vector-icons/MaterialCommunityIcons';
-import IconFA from 'react-native-vector-icons/FontAwesome';
+import IconOI from 'react-native-vector-icons/Octicons';
+import IconEI from 'react-native-vector-icons/EvilIcons';
 import { oauth } from 'react-native-force';
-import { DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import {
+  DrawerContentScrollView,
+  // DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
 import { useTheme } from '@react-navigation/native';
-import styles from './styles';
 import routes from 'constants/routes';
+import themedStyles from './themedStyles';
+import { useThemedStyles } from 'helpers/hooks';
 
 const DrawerContent = props => {
   const logout = useCallback(() => {
@@ -23,6 +29,7 @@ const DrawerContent = props => {
   }, []);
 
   const theme = useTheme();
+  const styles = useThemedStyles(themedStyles);
 
   return (
     <DrawerContentScrollView {...props} stickyHeaderIndices={[0]}>
@@ -31,17 +38,19 @@ const DrawerContent = props => {
         <Text style={[styles.title, { color: theme.colors.text }]}>RN SF Example</Text>
       </View>
       <DrawerItem
+        labelStyle={styles.label}
         label="Profile"
         key={routes.MY_PROFILE}
         onPress={() => props.navigation.navigate(routes.MY_PROFILE)}
         icon={() =>
           Platform.select({
             android: <IconMCI name="account-circle" size={30} color={theme.colors.primary} />,
-            ios: <IconFA name="user-circle" size={30} color={theme.colors.primary} />,
+            ios: <IconEI name="user" size={30} color={theme.colors.primary} />,
           })
         }
       />
       <DrawerItem
+        labelStyle={styles.label}
         label="Settings"
         key={routes.SETTINGS}
         onPress={() => props.navigation.navigate(routes.SETTINGS)}
@@ -56,9 +65,9 @@ const DrawerContent = props => {
               />
             ),
             ios: (
-              <IconI
+              <IconOI
                 style={{ width: 30, display: 'flex', paddingHorizontal: 2 }}
-                name="ios-settings"
+                name="settings"
                 size={30}
                 color={theme.colors.primary}
               />
@@ -67,6 +76,7 @@ const DrawerContent = props => {
         }
       />
       <DrawerItem
+        labelStyle={styles.label}
         label="Logout"
         key="logout"
         onPress={logout}

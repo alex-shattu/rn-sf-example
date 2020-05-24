@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useMemo } from 'react';
 import { debounce, throttle } from 'lodash';
+import { useSafeArea } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 
 /**
@@ -53,10 +54,12 @@ export const useThrottledFn = (
 
 export const useThemedStyles = themedStyles => {
   const theme = useTheme();
+  const insets = useSafeArea();
+
   console.log(theme.dark, theme.fontAddSize);
   return useMemo(() => {
     console.log('Generate styles');
-    const styles = themedStyles(theme);
+    const styles = themedStyles(theme, insets);
     return styles;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme.dark, theme.fontAddSize]);

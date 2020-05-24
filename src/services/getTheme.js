@@ -24,8 +24,9 @@ const getTheme = ({ darkTheme, scaleFonts = true }, fontAddSize) => {
           separator: darkTheme ? '#323233' : '#BCBBC1',
         },
         android: {
-          light: '#62d2ff',
-          dark: '#0073ae',
+          light: '#62D2FF',
+          dark: '#0073AE',
+          separator: darkTheme ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
         },
       }),
     },

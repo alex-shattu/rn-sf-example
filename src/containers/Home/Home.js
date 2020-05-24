@@ -11,13 +11,11 @@ import settingsSelectors from 'store/selectors/settings';
 import usersSelectors from 'store/selectors/users';
 import usersActions from 'store/actions/users';
 import { usePreviousValue, useDebouncedFn, useThemedStyles } from 'helpers/hooks';
-import { useSafeArea } from 'react-native-safe-area-context';
 import Item from './Item';
 import themedStyles from './themedStyles';
 
 const Home = props => {
   const prevIsError = usePreviousValue(props.isError);
-  const insets = useSafeArea();
   const ref = useRef(null);
   const styles = useThemedStyles(themedStyles);
 
@@ -94,7 +92,7 @@ const Home = props => {
         renderItem={({ item }) => <Item item={item} onClick={showUser} styles={styles} />}
         keyExtractor={({ Id }) => Id}
         ListHeaderComponent={() => null}
-        ListHeaderComponentStyle={styles.listHeaderComponent}
+        ListHeaderComponentStyle={props.data.length > 0 && styles.listHeaderComponent}
         ListFooterComponent={() =>
           props.canFetchMore && props.data.length > 0 ? (
             <ActivityIndicator
@@ -103,17 +101,17 @@ const Home = props => {
             />
           ) : null
         }
-        ListFooterComponentStyle={styles.listFooterComponent}
+        ListFooterComponentStyle={props.data.length > 0 && styles.listFooterComponent}
         onEndReached={fetchDataMore}
         onEndReachedThreshold={0.4}
-        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom }]}
+        contentContainerStyle={styles.contentContainer}
       />
       <Preloader isFetching={props.isFetching && !props.isRefreshing && !props.isFetchingMore} />
       <Toast
         ref={ref}
         position="center"
-        textStyle={styles.toast}
-        style={[styles.toast, { backgroundColor: props.theme.colors.text }]}
+        textStyle={styles.toastText}
+        style={styles.toast}
         defaultCloseDelay={1500}
       />
     </View>

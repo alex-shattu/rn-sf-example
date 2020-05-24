@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
 // import getScaledFontSize from 'services/getScaledFontSize';
 
-const themedStyles = theme =>
+const themedStyles = (theme, insets) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -15,12 +15,12 @@ const themedStyles = theme =>
       // height: 44,
     },
     toast: {
+      backgroundColor: theme.colors.text,
+    },
+    toastText: {
       marginHorizontal: 20,
       color: theme.colors.background,
       ...theme.fonts[16],
-    },
-    listFooterComponent: {
-      padding: 20,
     },
     ...Platform.select({
       ios: StyleSheet.create({
@@ -30,16 +30,20 @@ const themedStyles = theme =>
         },
         itemContainer: {
           minHeight: 44,
-          justifyContent: 'center',
+          flexDirection: 'row',
+          // justifyContent: 'center',
+          alignItems: 'center',
           paddingHorizontal: 16,
           backgroundColor: theme.colors.card,
         },
         itemText: {
           ...theme.human.body,
+          flex: 1,
           color: theme.colors.text,
         },
         contentContainer: {
-          marginTop: 28,
+          paddingTop: 28,
+          paddingBottom: insets.bottom,
         },
         listHeaderComponent: {
           borderBottomWidth: 1,
@@ -48,12 +52,10 @@ const themedStyles = theme =>
         listFooterComponent: {
           borderTopWidth: 1,
           borderTopColor: theme.colors.separator,
-          // paddingTop: 10,
+          justifyContent: 'center',
         },
         bottomActivity: {
-          // padding: 20,
-          height: 60,
-          justifyContent: 'center',
+          padding: 30,
         },
       }),
       android: StyleSheet.create({
@@ -65,20 +67,26 @@ const themedStyles = theme =>
           backgroundColor: theme.colors.card,
         },
         itemText: {
-          ...theme.material.body,
+          ...theme.material.body1,
           color: theme.colors.text,
         },
         contentContainer: {
-          marginTop: 28,
+          paddingTop: 28,
+          paddingBottom: insets.bottom,
         },
         listHeaderComponent: {
-          borderBottomWidth: 1,
-          borderBottomColor: theme.colors.separator,
+          // borderBottomWidth: 1,
+          // borderBottomColor: theme.colors.separator,
+        },
+        bottomActivity: {
+          // borderWidth: 1,
+          padding: 30,
         },
         listFooterComponent: {
-          borderTopWidth: 1,
-          borderTopColor: theme.colors.separator,
-          // paddingTop: 10,
+          // borderTopWidth: 1,
+          // borderTopColor: theme.colors.separator,
+          // height: 80,
+          justifyContent: 'center',
         },
       }),
     }),

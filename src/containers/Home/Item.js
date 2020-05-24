@@ -1,10 +1,10 @@
 import React, { useCallback, memo } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Platform } from 'react-native';
+// import Ripple from 'react-native-material-ripple';
 import PropTypes from 'prop-types';
-// import { ListItem, Icon } from 'react-native-elements';
-// import styles from './styles';
-import { useTheme } from '@react-navigation/native';
-// import styles from 'components/Preloader/styles';
+import IconMI from 'react-native-vector-icons/MaterialIcons';
+import IconEI from 'react-native-vector-icons/EvilIcons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Item = ({ item, onClick, styles }) => {
   const handleClick = useCallback(() => {
@@ -12,31 +12,18 @@ const Item = ({ item, onClick, styles }) => {
   }, [item, onClick]);
 
   return (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.Name}</Text>
-    </View>
-    // <ListItem
-    //   onPress={handleClick}
-    //   title={item.Name}
-    //   subtitle={item.Email}
-    //   leftAvatar={() => (
-    //     <Icon
-    //       name="account-circle"
-    //       color={theme.colors.text}
-    //       size={getScaledFontSize(20, fontAddSize)}
-    //     />
-    //   )}
-    //   right={() => <Icon name="arrow-right" />}
-    //   containerStyle={{
-    //     backgroundColor: theme.colors.card,
-    //   }}
-    //   titleStyle={[
-    //     styles.titleStyle,
-    //     { color: theme.colors.text, fontSize: getScaledFontSize(16, fontAddSize) },
-    //   ]}
-    //   subtitleStyle={{ color: theme.colors.text }}
-    //   bottomDivider
-    // />
+    <TouchableOpacity activeOpacity={0.8} onPress={handleClick}>
+      <View style={styles.itemContainer}>
+        <Text style={styles.itemText}>{item.Name}</Text>
+        {/* <Text>Detail</Text>
+      {() =>
+        Platform.select({
+          ios: <IconEI size={13} />,
+          android: <IconMI size={14} />,
+        })
+      } */}
+      </View>
+    </TouchableOpacity>
   );
 };
 
