@@ -1,7 +1,7 @@
 ### React Native & Salesforce Example App
 Based on [forcereact](https://www.npmjs.com/package/forcereact)
 
-
+<img src="https://github.com/alex-shattu/rn-sf-example/raw/master/screenshots/ios-settings.jpg" alt="React Native Salesforce Example App" width="250">
 
 ##### Includes:
 
