@@ -13,7 +13,7 @@ const themedStyles = theme =>
       marginHorizontal: 20,
     },
     ...Platform.select({
-      ios: {
+      ios: StyleSheet.create({
         sliderThumbStyle: {
           shadowOffset: {
             width: 0,
@@ -93,8 +93,8 @@ const themedStyles = theme =>
           marginLeft: 20,
           backgroundColor: theme.colors.separator,
         },
-      },
-      android: {
+      }),
+      android: StyleSheet.create({
         groupTitle: {
           ...theme.material.body1,
           paddingHorizontal: 16,
@@ -148,7 +148,7 @@ const themedStyles = theme =>
         trackStyle: {
           height: 2,
         },
-      },
+      }),
     }),
   });
 

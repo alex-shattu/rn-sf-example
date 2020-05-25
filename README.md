@@ -1,11 +1,27 @@
 ### React Native & Salesforce Example App
 Based on [forcereact](https://www.npmjs.com/package/forcereact)
 
+
+
 ##### Includes:
 
 - [react-navigation v5](https://www.npmjs.com/package/react-navigation)
 - [react-native-vector-icons](https://www.npmjs.com/package/react-native-vector-icons)
 - [react-native-elements](https://www.npmjs.com/package/react-native-elements)
+- [react-native-typography](https://github.com/hectahertz/react-native-typography)
+- [redux](https://github.com/reduxjs/redux)
+- [redux-persist](https://github.com/rt2zz/redux-persist)
+- [redux-saga](https://github.com/redux-saga/redux-saga)
+- Theming and font scaling
+- Platform specific UI
+- SalesforceMobileSDK-ReactNative
+
+
+##### TODO
+- [GraphQL Salesforce](https://appexchange.salesforce.com/appxListingDetail?listingId=a0N3A00000G0l6nUAB)
+- Profile screen with some functionality: edit profile, upload avatar.
+- SmartStore
+- MobileSync
 
 ### Install
 

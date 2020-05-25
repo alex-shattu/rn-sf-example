@@ -1,9 +1,9 @@
 import React, { useCallback, memo } from 'react';
 import { View, Text, Platform } from 'react-native';
 // import Ripple from 'react-native-material-ripple';
-import PropTypes from 'prop-types';
-import IconMI from 'react-native-vector-icons/MaterialIcons';
-import IconEI from 'react-native-vector-icons/EvilIcons';
+// import PropTypes from 'prop-types';
+// import IconMI from 'react-native-vector-icons/MaterialIcons';
+// import IconEI from 'react-native-vector-icons/EvilIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Item = ({ item, onClick, styles }) => {

@@ -1,11 +1,9 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { View, Text, Platform, TouchableOpacity, Switch } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 // import Slider from '@react-native-community/slider';
 import { Slider, Divider } from 'react-native-elements';
-import { iOSColors, human } from 'react-native-typography';
-import getScaledFontSize from 'services/getScaledFontSize';
+import { iOSColors } from 'react-native-typography';
 import {
   MAX_ADDITIONAL_FONT_SIZE,
   MIN_ADDITIONAL_FONT_SIZE,

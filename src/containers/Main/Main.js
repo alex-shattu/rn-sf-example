@@ -11,13 +11,10 @@ import settingsSelectors from 'store/selectors/settings';
 
 const Drawer = createDrawerNavigator();
 
-const Main = ({ theme, darkTheme, scaleFonts }) => {
-  // const theme = useMemo(() => getTheme({ darkTheme, scaleFonts }), [darkTheme, scaleFonts]);
-
+const Main = ({ theme }) => {
   return (
     <NavigationContainer theme={theme}>
       <Drawer.Navigator
-        // eslint-disable-next-line no-shadow
         drawerContent={props => <DrawerContent {...props} />}
         initialRouteName="drawer">
         <Drawer.Screen name="drawer" component={HomeStack} />
@@ -27,12 +24,12 @@ const Main = ({ theme, darkTheme, scaleFonts }) => {
 };
 
 Main.propTypes = {
-  darkTheme: PropTypes.bool,
+  theme: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
-  darkTheme: settingsSelectors.getDarkTheme(state),
-  scaleFonts: settingsSelectors.getScaleFonts(state),
+  // darkTheme: settingsSelectors.getDarkTheme(state),
+  // scaleFonts: settingsSelectors.getScaleFonts(state),
   theme: settingsSelectors.getTheme(state),
 });
 

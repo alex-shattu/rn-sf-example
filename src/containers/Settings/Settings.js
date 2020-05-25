@@ -8,7 +8,6 @@ import settingsSelectors from 'store/selectors/settings';
 import SettingsUI from './SettingsUI';
 
 export const Settings = props => {
-  // const theme = useTheme();
   const [fontAddSize, setFontAddSize] = useState(props.settings.fontAddSize);
   const [darkTheme, setDarkTheme] = useState(props.settings.theme.dark);
   const isFirstRun = useRef(true);
