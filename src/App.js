@@ -8,7 +8,6 @@ import Main from 'containers/Main/Main';
 const { store, persistor } = createStore();
 
 const App = () => {
-  console.log('OK');
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

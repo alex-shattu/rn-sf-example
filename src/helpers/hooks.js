@@ -56,9 +56,7 @@ export const useThemedStyles = themedStyles => {
   const theme = useTheme();
   const insets = useSafeArea();
 
-  console.log(theme.dark, theme.fontAddSize);
   return useMemo(() => {
-    console.log('Generate styles');
     const styles = themedStyles(theme, insets);
     return styles;
     // eslint-disable-next-line react-hooks/exhaustive-deps
