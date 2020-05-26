@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { types } from 'store/actions/user';
+import { CLEAR_STORE } from 'store/actions/store';
 
 const initialState = {
   data: {}, // by id
@@ -32,6 +33,7 @@ export default handleActions(
       isFetching: false,
       isError: true,
     }),
+    [CLEAR_STORE]: () => initialState,
   },
   initialState,
 );

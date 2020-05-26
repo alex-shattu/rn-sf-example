@@ -10,6 +10,7 @@ import Preloader from 'components/Preloader';
 import settingsSelectors from 'store/selectors/settings';
 import usersSelectors from 'store/selectors/users';
 import usersActions from 'store/actions/users';
+import profileActions from 'store/actions/profile';
 import { usePreviousValue, useDebouncedFn, useThemedStyles } from 'helpers/hooks';
 import Item from './Item';
 import themedStyles from './themedStyles';
@@ -49,10 +50,16 @@ const Home = props => {
 
   useEffect(() => {
     oauth.getAuthCredentials(
-      () => fetchData(),
+      data => {
+        props.updateProfile(data);
+        fetchData();
+      },
       () => {
         oauth.authenticate(
-          () => fetchData(),
+          data => {
+            props.updateProfile(data);
+            fetchData();
+          },
           ([{ errorCode, message }] = [{}]) => {
             console.log({ errorCode, message });
           },
@@ -144,6 +151,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchUsers: usersActions.fetchUsers,
+  updateProfile: profileActions.updateProfile,
 };
 
 export default connect(

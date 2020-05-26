@@ -6,16 +6,17 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 // import { createStackNavigator } from '@react-navigation/stack';
 import HomeStack from 'navigation/HomeStack';
 import DrawerContent from 'components/DrawerContent';
-import getTheme from 'services/getTheme';
+// import getTheme from 'services/getTheme';
+import storeActions from 'store/actions/store'
 import settingsSelectors from 'store/selectors/settings';
 
 const Drawer = createDrawerNavigator();
 
-const Main = ({ theme }) => {
+const Main = ({ theme, clearStore }) => {
   return (
     <NavigationContainer theme={theme}>
       <Drawer.Navigator
-        drawerContent={props => <DrawerContent {...props} />}
+        drawerContent={props => <DrawerContent {...props} clearStore={clearStore} />}
         initialRouteName="drawer">
         <Drawer.Screen name="drawer" component={HomeStack} />
       </Drawer.Navigator>
@@ -33,7 +34,9 @@ const mapStateToProps = state => ({
   theme: settingsSelectors.getTheme(state),
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  clearStore: storeActions.clearStore,
+};
 
 export default connect(
   mapStateToProps,

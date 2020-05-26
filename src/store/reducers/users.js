@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { types } from 'store/actions/users';
+import { CLEAR_STORE } from 'store/actions/store';
 
 const initialState = {
   data: [],
@@ -37,6 +38,7 @@ export default handleActions(
       isFetchingMore: false,
       canFetchMore: true,
     }),
+    [CLEAR_STORE]: () => initialState,
   },
   initialState,
 );

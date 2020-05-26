@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import { types } from 'store/actions/settings';
 import { DEFAULT_ADDITIONAL_FONT_SIZE } from 'constants/sizes';
 import getTheme from 'services/getTheme';
+import { CLEAR_STORE } from 'store/actions/store';
 
 const initialState = {
   fontAddSize: DEFAULT_ADDITIONAL_FONT_SIZE,
@@ -29,6 +30,7 @@ export default handleActions(
       scaleFonts,
       theme: getTheme({ darkTheme, scaleFonts }, fontAddSize),
     }),
+    [CLEAR_STORE]: () => initialState,
   },
   initialState,
 );

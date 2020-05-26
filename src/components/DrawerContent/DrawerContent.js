@@ -18,6 +18,7 @@ import { useThemedStyles } from 'helpers/hooks';
 
 const DrawerContent = props => {
   const logout = useCallback(() => {
+    props.clearStore();
     oauth.logout(
       () => {
         console.log('SUCCESS LOGOUT');
@@ -26,7 +27,8 @@ const DrawerContent = props => {
         console.log('LOGOUT ERROR', error);
       },
     );
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.clearStore]);
 
   const theme = useTheme();
   const styles = useThemedStyles(themedStyles);

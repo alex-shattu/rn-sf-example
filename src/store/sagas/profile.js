@@ -21,9 +21,10 @@ function* makeGetProfile({ payload }) {
   }
 }
 
-function* makeUpdateProfile({ payload }) {
+function* makeUpdateProfile({ payload: data }) {
   try {
-    yield put(profileActions.fetchProfileStart());
+    // yield put(profileActions.fetchProfileStart());
+    yield put(profileActions.fetchProfileSuccess(data));
   } catch (error) {
     yield put(profileActions.fetchProfileFailed());
   }
