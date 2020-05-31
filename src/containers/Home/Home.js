@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { View, FlatList, RefreshControl, ActivityIndicator, Platform } from 'react-native';
 import Toast from 'react-native-easy-toast';
 import { useQuery } from '@apollo/react-hooks';
@@ -140,10 +140,6 @@ const Home = props => {
     </View>
   );
 };
-
-// Home.defaultProps = {
-//   data: [],
-// };
 
 // Home.propTypes = {
 //   fontAddSize: PropTypes.number,

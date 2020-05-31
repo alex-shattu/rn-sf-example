@@ -66,7 +66,7 @@ const HomeStack = ({ navigation, route }) => {
           headerBackTitleVisible: Platform.OS === 'ios',
         }}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name={routes.SETTINGS}
         component={Settings}
         options={{
@@ -82,7 +82,7 @@ const HomeStack = ({ navigation, route }) => {
           headerTitle: 'Profile',
           headerBackTitle: Platform.select({ ios: 'Home' }),
         }}
-      /> */}
+      />
     </Stack.Navigator>
   );
 };

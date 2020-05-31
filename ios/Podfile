@@ -51,6 +51,8 @@ pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
 
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
 end
 
 # Comment the following if you do not want the SDK to emit signpost events for instrumentation. Signposts are  enabled for non release version of the app.

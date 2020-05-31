@@ -1,20 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import _ from 'lodash';
-import { connect } from 'react-redux';
-import settingsActions from 'store/actions/settings';
-import settingsSelectors from 'store/selectors/settings';
 import SettingsUI from './SettingsUI';
+import { useTheme } from '@react-navigation/native';
 
-export const Settings = props => {
-  const [fontAddSize, setFontAddSize] = useState(props.settings.fontAddSize);
-  const [darkTheme, setDarkTheme] = useState(props.settings.theme.dark);
+export const Settings = () => {
+  const settings = {
+    fontAddSize: 1,
+    theme: {
+      dark: false,
+    },
+  };
+  const [fontAddSize, setFontAddSize] = useState(settings.fontAddSize);
+  const [darkTheme, setDarkTheme] = useState(settings.theme.dark);
   const isFirstRun = useRef(true);
+  const theme = useTheme();
+  const setSettings = useCallback(() => {}, []);
 
   useEffect(() => {
     if (isFirstRun.current) isFirstRun.current = false;
-    else props.setSettings({ fontAddSize, darkTheme });
+    else setSettings({ fontAddSize, darkTheme });
   }, [fontAddSize, darkTheme]);
 
   const debouncedSetFontAddSize = useCallback(_.debounce(value => setFontAddSize(value), 300), []);
@@ -25,22 +31,11 @@ export const Settings = props => {
       darkTheme={darkTheme}
       fontAddSize={fontAddSize}
       debouncedSetFontAddSize={debouncedSetFontAddSize}
-      theme={props.settings.theme}
+      theme={theme}
     />
   );
 };
 
-Settings.propTypes = {};
+// Settings.propTypes = {};
 
-const mapStateToProps = state => ({
-  settings: settingsSelectors.getSettings(state),
-});
-
-const mapDispatchToProps = {
-  setSettings: settingsActions.setSettings,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Settings);
+export default Settings;

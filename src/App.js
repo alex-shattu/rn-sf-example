@@ -9,7 +9,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import axios from 'axios';
 import Main from 'containers/Main/Main';
 import Config from 'react-native-config';
-console.log({ Config });
+
 const cache = new InMemoryCache({
   addTypename: false,
 });
