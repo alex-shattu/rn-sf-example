@@ -1,46 +1,62 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { RefreshControl, View } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Toast from 'react-native-easy-toast';
 import { ScrollView } from 'react-native-gesture-handler';
-import { connect } from 'react-redux';
-import { useTheme } from '@react-navigation/native';
 import Preloader from 'components/Preloader';
-import settingsSelectors from 'store/selectors/settings';
-import userSelectors from 'store/selectors/user';
-import userActions from 'store/actions/user';
 import { usePreviousValue } from 'helpers/hooks';
-import getScaledFontSize from 'services/getScaledFontSize';
+// import getScaledFontSize from 'services/getScaledFontSize';
+import { useQuery } from '@apollo/react-hooks';
+// import themedStyles from './themedStyles';
+import { useTheme } from '@react-navigation/native';
+import gql from 'graphql-tag';
 import styles from './styles';
 
+const fetchTypes = {
+  FETCH: 'FETCH',
+  REFETCH: 'REFETCH',
+};
+
 const User = props => {
-  const prevIsError = usePreviousValue(props.isError);
-  const toastRef = useRef(null);
-
-  const refreshUser = useCallback(
-    () => props.getUser({ id: props.route.params.id, isRefreshing: true }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props.route.params.id],
-  );
-
-  const getUser = useCallback(
-    () => props.getUser({ id: props.route.params.id, isRefreshing: false }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props.route.params.id],
-  );
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
   const theme = useTheme();
+  const toastRef = useRef(null);
+  // const styles = useThemedStyles(themedStyles);
+  const [fetchType, setFetchType] = useState(fetchTypes.FETCH);
+
+  const { loading, error, data = { user: [{}] }, refetch } = useQuery(
+    gql`
+      query GetUser($id: Int) {
+        user(Id: $id) {
+          Id
+          Name
+        }
+      }
+    `,
+    { variables: { id: props.route.params.id }, notifyOnNetworkStatusChange: true },
+  );
+
+  const prevError = usePreviousValue(error);
+  const prevLoading = usePreviousValue(loading);
 
   useEffect(() => {
-    if (!prevIsError && props.isError) {
-      toastRef.current.show('Error');
+    if (!loading && prevLoading) {
+      setFetchType(null);
     }
-  }, [props.isError, prevIsError]);
+  }, [loading, prevLoading]);
+
+  useEffect(() => {
+    if (!prevError && error) {
+      toastRef.current?.show('Error');
+    }
+  }, [prevError, error]);
+
+  const handleRefresh = useCallback(() => {
+    setFetchType(fetchTypes.REFETCH);
+    refetch();
+  }, [refetch]);
+
+  console.log(data);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -48,16 +64,16 @@ const User = props => {
         refreshControl={
           <RefreshControl
             colors={[theme.colors.primary]}
-            refreshing={props.isRefreshing}
-            onRefresh={refreshUser}
+            refreshing={loading && fetchType === fetchTypes.REFETCH}
+            onRefresh={handleRefresh}
             progressBackgroundColor={theme.colors.background}
           />
         }
         style={styles.scrollView}>
-        {Object.keys(props.user).map((key, index) => (
+        {Object.keys(data.user[0]).map((key, index) => (
           <ListItem
             key={index}
-            title={String(props.user[key])}
+            title={String(data.user[0][key])}
             subtitle={key}
             containerStyle={{
               backgroundColor: theme.colors.card,
@@ -66,16 +82,13 @@ const User = props => {
             subtitleStyle={{ color: theme.colors.text }}
           />
         ))}
-        <Preloader isFetching={props.isFetching && !props.isRefreshing} />
       </ScrollView>
+      <Preloader isFetching={loading && fetchType === fetchTypes.FETCH} />
       <Toast
         ref={toastRef}
         position="center"
-        textStyle={{
-          color: theme.colors.background,
-          fontSize: getScaledFontSize(16, props.fontAddSize),
-        }}
-        style={[styles.toast, { backgroundColor: theme.colors.text }]}
+        textStyle={styles.toastText}
+        style={styles.toast}
         defaultCloseDelay={1500}
       />
     </View>
@@ -86,19 +99,4 @@ User.propTypes = {
   id: PropTypes.string,
 };
 
-const mapStateToProps = (state, { route: { params } }) => ({
-  fontAddSize: settingsSelectors.getFontAddSize(state),
-  user: userSelectors.getData(state, params), // (state, { id })
-  isFetching: userSelectors.getIsFetching(state),
-  isRefreshing: userSelectors.getIsRefreshing(state),
-  isError: userSelectors.getIsError(state),
-});
-
-const mapDispatchToProps = {
-  getUser: userActions.getUser,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(User);
+export default User;

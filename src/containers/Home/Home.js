@@ -1,121 +1,137 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import { View, FlatList, RefreshControl, ActivityIndicator, Platform } from 'react-native';
-import { oauth } from 'react-native-force';
 import Toast from 'react-native-easy-toast';
+import { useQuery } from '@apollo/react-hooks';
+import { useTheme } from '@react-navigation/native';
+import gql from 'graphql-tag';
+
 import Divider from 'components/Divider';
-import { connect } from 'react-redux';
 import Preloader from 'components/Preloader';
-import settingsSelectors from 'store/selectors/settings';
-import usersSelectors from 'store/selectors/users';
-import usersActions from 'store/actions/users';
-import profileActions from 'store/actions/profile';
+import routes from 'constants/routes';
 import { usePreviousValue, useDebouncedFn, useThemedStyles } from 'helpers/hooks';
-import Item from './Item';
 import themedStyles from './themedStyles';
+import Item from './Item';
+
+const fetchTypes = {
+  FETCH: 'FETCH',
+  REFETCH: 'REFETCH',
+  FETCH_MORE: 'FETCH_MORE',
+};
 
 const Home = props => {
-  const prevIsError = usePreviousValue(props.isError);
-  const ref = useRef(null);
+  const theme = useTheme();
+  const toastRef = useRef(null);
   const styles = useThemedStyles(themedStyles);
+  const canFetchMore = false;
+  const [fetchType, setFetchType] = useState(fetchTypes.FETCH);
 
-  const fetchData = useCallback(
-    () => props.fetchUsers({ isRefreshing: false, offset: props.data.length }),
-    [props.data.length],
+  const { loading, error, data = { user: [] }, refetch, fetchMore } = useQuery(
+    gql`
+      query GetUsers($offset: Int) {
+        user(Limit: 10, Offset: $offset) {
+          Id
+          Name
+        }
+      }
+    `,
+    { variables: { offset: 0 }, notifyOnNetworkStatusChange: true },
   );
 
-  const refreshData = useCallback(() => props.fetchUsers({ isRefreshing: true, offset: 0 }), []);
+  const prevError = usePreviousValue(error);
+  const prevLoading = usePreviousValue(loading);
 
-  const showUser = useCallback(({ Id: id }) => props.navigation.navigate('user', { id }), []);
-  const fetchDataMore = useDebouncedFn(
+  useEffect(() => {
+    if (!loading && prevLoading) {
+      setFetchType(null);
+    }
+  }, [loading, prevLoading]);
+
+  useEffect(() => {
+    if (!prevError && error) {
+      toastRef.current?.show('Error');
+    }
+  }, [prevError, error]);
+
+  const handleRefresh = useCallback(() => {
+    setFetchType(fetchTypes.REFETCH);
+    refetch();
+  }, [refetch]);
+
+  const showUser = useCallback(({ Id: id }) => props.navigation.navigate(routes.USER, { id }), []);
+  const handleFetchMore = useDebouncedFn(
     () => {
-      if (props.canFetchMore && !props.isFetching && props.data.length > 0) {
-        fetchData();
-      }
+      setFetchType(fetchTypes.FETCH_MORE);
+      fetchMore({
+        variables: {
+          offset: data.user.length,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            ...prev,
+            user: [...prev.user, ...fetchMoreResult.user],
+          };
+        },
+      });
     },
     1000,
     {
       leading: true,
       trailing: false,
     },
-    [props.isFetching, props.data, props.canFetchMore],
+    [data.user.length],
   );
-
-  useEffect(() => {
-    if (!prevIsError && props.isError) {
-      ref.current?.show('Error');
-    }
-  }, [props.isError, prevIsError]);
-
-  useEffect(() => {
-    oauth.getAuthCredentials(
-      data => {
-        props.updateProfile(data);
-        fetchData();
-      },
-      () => {
-        oauth.authenticate(
-          data => {
-            props.updateProfile(data);
-            fetchData();
-          },
-          ([{ errorCode, message }] = [{}]) => {
-            console.log({ errorCode, message });
-          },
-        );
-      },
-    );
-  }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
         ItemSeparatorComponent={() => (
           <Divider
-            color={props.theme.colors.separator}
+            color={theme.colors.separator}
             offsetLeft={16}
-            offsetColor={props.theme.colors.card}
+            offsetColor={theme.colors.card}
             height={1}
           />
         )}
         refreshControl={
           <RefreshControl
             colors={Platform.select({
-              android: [props.theme.colors.primary],
-              ios: [props.theme.colors.text],
+              android: [theme.colors.primary],
+              ios: [theme.colors.text],
             })}
             // tintColor={Platform.select({
-            //   android: props.theme.colors.primary,
-            //   ios: props.theme.colors.text,
+            //   android: theme.colors.primary,
+            //   ios: theme.colors.text,
             // })}
-            refreshing={props.isRefreshing}
-            onRefresh={refreshData}
-            progressBackgroundColor={props.theme.colors.background}
+            refreshing={loading && fetchType === fetchTypes.REFETCH}
+            onRefresh={handleRefresh}
+            progressBackgroundColor={theme.colors.background}
           />
         }
         style={styles.flatList}
-        data={props.data}
+        data={data.user}
         renderItem={({ item }) => <Item item={item} onClick={showUser} styles={styles} />}
         keyExtractor={({ Id }) => Id}
         ListHeaderComponent={() => null}
-        ListHeaderComponentStyle={props.data.length > 0 && styles.listHeaderComponent}
+        ListHeaderComponentStyle={data.user.length > 0 && styles.listHeaderComponent}
         ListFooterComponent={() =>
-          props.canFetchMore && props.data.length > 0 ? (
+          canFetchMore && data.user.length > 0 ? (
             <ActivityIndicator
               style={styles.bottomActivity}
-              color={Platform.OS === 'android' && props.theme.colors.primary}
+              color={Platform.OS === 'android' && theme.colors.primary}
             />
           ) : null
         }
-        ListFooterComponentStyle={props.data.length > 0 && styles.listFooterComponent}
-        onEndReached={fetchDataMore}
+        ListFooterComponentStyle={data.user.length > 0 && styles.listFooterComponent}
+        onEndReached={handleFetchMore}
         onEndReachedThreshold={0.4}
         contentContainerStyle={styles.contentContainer}
       />
-      <Preloader isFetching={props.isFetching && !props.isRefreshing && !props.isFetchingMore} />
+      <Preloader isFetching={loading && fetchType === fetchTypes.FETCH} />
       <Toast
-        ref={ref}
+        ref={toastRef}
         position="center"
         textStyle={styles.toastText}
         style={styles.toast}
@@ -125,36 +141,12 @@ const Home = props => {
   );
 };
 
-Home.defaultProps = {
-  data: [],
-};
+// Home.defaultProps = {
+//   data: [],
+// };
 
-Home.propTypes = {
-  fontAddSize: PropTypes.number,
-  data: PropTypes.array.isRequired,
-  isFetching: PropTypes.bool,
-  isRefreshing: PropTypes.bool,
-  isFetchingMore: PropTypes.bool,
-  isError: PropTypes.bool,
-};
+// Home.propTypes = {
+//   fontAddSize: PropTypes.number,
+// };
 
-const mapStateToProps = state => ({
-  fontAddSize: settingsSelectors.getFontAddSize(state),
-  data: usersSelectors.getData(state),
-  isFetching: usersSelectors.getIsFetching(state),
-  isRefreshing: usersSelectors.getIsRefreshing(state),
-  isFetchingMore: usersSelectors.getIsFetchingMore(state),
-  isError: usersSelectors.getIsError(state),
-  canFetchMore: usersSelectors.getCanFetchMore(state),
-  theme: settingsSelectors.getTheme(state),
-});
-
-const mapDispatchToProps = {
-  fetchUsers: usersActions.fetchUsers,
-  updateProfile: profileActions.updateProfile,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default Home;

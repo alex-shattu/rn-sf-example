@@ -18,7 +18,7 @@ import { useThemedStyles } from 'helpers/hooks';
 
 const DrawerContent = props => {
   const logout = useCallback(() => {
-    props.clearStore();
+    // props.clearStore();
     oauth.logout(
       () => {
         console.log('SUCCESS LOGOUT');

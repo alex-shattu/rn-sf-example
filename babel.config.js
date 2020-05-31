@@ -7,7 +7,7 @@ module.exports = {
       'babel-plugin-module-resolver',
       {
         root: [path.resolve('./src')],
-        extensions: ['.js', '.json', '.ts'],
+        extensions: ['.js', '.json', '.ts', '.graphql'],
         alias: {
           '~': './src',
         },

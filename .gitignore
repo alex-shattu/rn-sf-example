@@ -57,3 +57,7 @@ Pods/
 # SF SDK
 #
 mobile_sdk/
+
+# ENV
+#
+.env
